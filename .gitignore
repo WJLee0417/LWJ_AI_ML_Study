@@ -14,3 +14,13 @@ venv/
 # Generated analysis outputs
 01_Data_Analysis/01_data-cleaning/results/generated/*
 !01_Data_Analysis/01_data-cleaning/results/generated/.gitkeep
+
+# Local data and generated figures for the Seoul bike demand EDA project
+01_Data_Analysis/02_eda-seoul-bike/data/raw/*
+!01_Data_Analysis/02_eda-seoul-bike/data/raw/.gitkeep
+01_Data_Analysis/02_eda-seoul-bike/data/processed/*
+!01_Data_Analysis/02_eda-seoul-bike/data/processed/.gitkeep
+01_Data_Analysis/02_eda-seoul-bike/results/figures/*
+!01_Data_Analysis/02_eda-seoul-bike/results/figures/.gitkeep
+01_Data_Analysis/02_eda-seoul-bike/results/generated/*
+!01_Data_Analysis/02_eda-seoul-bike/results/generated/.gitkeep
