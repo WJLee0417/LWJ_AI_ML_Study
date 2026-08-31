@@ -32,3 +32,11 @@ venv/
 !01_Data_Analysis/03_sql-analysis/data/processed/.gitkeep
 01_Data_Analysis/03_sql-analysis/results/generated/*
 !01_Data_Analysis/03_sql-analysis/results/generated/.gitkeep
+
+# Generated output for the customer segmentation project
+01_Data_Analysis/04_customer-segmentation/data/processed/*
+!01_Data_Analysis/04_customer-segmentation/data/processed/.gitkeep
+01_Data_Analysis/04_customer-segmentation/results/figures/*
+!01_Data_Analysis/04_customer-segmentation/results/figures/.gitkeep
+01_Data_Analysis/04_customer-segmentation/results/generated/*
+!01_Data_Analysis/04_customer-segmentation/results/generated/.gitkeep
