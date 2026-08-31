@@ -24,3 +24,11 @@ venv/
 !01_Data_Analysis/02_eda-seoul-bike/results/figures/.gitkeep
 01_Data_Analysis/02_eda-seoul-bike/results/generated/*
 !01_Data_Analysis/02_eda-seoul-bike/results/generated/.gitkeep
+
+# Local data and generated output for the e-commerce SQL project
+01_Data_Analysis/03_sql-analysis/data/raw/*
+!01_Data_Analysis/03_sql-analysis/data/raw/.gitkeep
+01_Data_Analysis/03_sql-analysis/data/processed/*
+!01_Data_Analysis/03_sql-analysis/data/processed/.gitkeep
+01_Data_Analysis/03_sql-analysis/results/generated/*
+!01_Data_Analysis/03_sql-analysis/results/generated/.gitkeep
