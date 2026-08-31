@@ -1,0 +1,16 @@
+# Python and Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Local data for the Online Retail cleaning project
+01_Data_Analysis/01_data-cleaning/data/raw/*
+!01_Data_Analysis/01_data-cleaning/data/raw/.gitkeep
+01_Data_Analysis/01_data-cleaning/data/processed/*
+!01_Data_Analysis/01_data-cleaning/data/processed/.gitkeep
+
+# Generated analysis outputs
+01_Data_Analysis/01_data-cleaning/results/generated/*
+!01_Data_Analysis/01_data-cleaning/results/generated/.gitkeep
