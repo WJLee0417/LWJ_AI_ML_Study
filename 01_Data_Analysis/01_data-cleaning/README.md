@@ -54,6 +54,18 @@ python src/preprocess.py
 | `data/processed/orders_for_customer_analysis.csv` | 유효 일반 주문 중 고객 ID가 있는 고객 분석 테이블 |
 | `results/generated/data-quality-report.md` | 실행 시 자동 생성되는 데이터 품질 보고서 |
 
+## 결과 스냅샷
+
+| 항목 | 결과 |
+| --- | ---: |
+| 원본 행 수 | 541,909 |
+| 완전 중복 행 | 5,268 (0.97%) |
+| 취소 주문 행 | 10,587 (1.95%) |
+| 고객 ID 결측 | 135,080 (24.93%) |
+| 거래 분석용 유효 주문 | 524,878 |
+
+[전체 데이터 품질 보고서](assets/data-quality-report.md)
+
 ## 실행 환경
 
 Python 3.11 이상을 권장한다.

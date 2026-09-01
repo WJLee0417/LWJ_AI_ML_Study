@@ -46,6 +46,12 @@ python src/analyze.py
 | `rainfall-demand.png` | 강수 구간별 수요 차이 |
 | `results/generated/analysis-report.md` | 발견, 운영 제안, 한계 |
 
+## 결과 미리보기
+
+![시간대와 요일별 평균 수요](assets/hour-weekday-heatmap.png)
+
+![평일과 주말의 시간대별 수요](assets/weekday-weekend-pattern.png)
+
 ## 실행 환경
 
 Python 3.11 이상을 권장한다.

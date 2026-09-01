@@ -47,6 +47,8 @@ erDiagram
 
 독립 Mermaid 원본은 [docs/erd.mmd](docs/erd.mmd)에 있다. GitHub README에서 바로 렌더링되며, 필요하면 Mermaid Live Editor 등에서 PNG로 내보낼 수 있다.
 
+![Olist SQL 분석 ERD](assets/erd.svg)
+
 ## 실행 순서
 
 ### 1. 원본 다운로드 및 변환

@@ -61,6 +61,12 @@ python src/segment_customers.py
 | cluster-profile.png | 군집별 표준화 특성 비교 |
 | segmentation-report.md | 선택한 K, 안정성, 전략, 한계 |
 
+## 결과 미리보기
+
+![K 후보별 silhouette score](assets/silhouette-score.png)
+
+![군집별 표준화 특성 프로필](assets/cluster-profile.png)
+
 ## 한계
 
 - 군집은 고객 행동의 유사성이지 인과관계나 고객의 본질적인 등급을 뜻하지 않는다.

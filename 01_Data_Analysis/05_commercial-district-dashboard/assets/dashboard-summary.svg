@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="350" viewBox="0 0 900 350">
+  <style>.card{fill:#f8fafc;stroke:#0f766e;stroke-width:2;rx:12}.title{font:700 20px Arial,sans-serif;fill:#134e4a}.label{font:14px Arial,sans-serif;fill:#475569}.value{font:700 26px Arial,sans-serif;fill:#0f766e}.bar{fill:#14b8a6}</style>
+  <text class="title" x="30" y="35">Gangnam cafe analysis — 2025 Q4 snapshot</text>
+  <rect class="card" x="30" y="60" width="190" height="100"/><text class="label" x="50" y="95">Commercial districts</text><text class="value" x="50" y="130">76</text>
+  <rect class="card" x="250" y="60" width="190" height="100"/><text class="label" x="270" y="95">Estimated sales</text><text class="value" x="270" y="130">105.1B KRW</text>
+  <rect class="card" x="470" y="60" width="190" height="100"/><text class="label" x="490" y="95">Candidate districts</text><text class="value" x="490" y="130">13</text>
+  <rect class="card" x="690" y="60" width="180" height="100"/><text class="label" x="710" y="95">Stores</text><text class="value" x="710" y="130">1,686</text>
+  <text class="label" x="30" y="210">Estimated sales by quarter (2024 Q1 → 2025 Q4)</text>
+  <rect class="bar" x="45" y="270" width="55" height="48"/><rect class="bar" x="145" y="238" width="55" height="80"/><rect class="bar" x="245" y="247" width="55" height="71"/><rect class="bar" x="345" y="278" width="55" height="40"/>
+  <rect class="bar" x="445" y="282" width="55" height="36"/><rect class="bar" x="545" y="262" width="55" height="56"/><rect class="bar" x="645" y="210" width="55" height="108"/><rect class="bar" x="745" y="258" width="55" height="60"/>
+  <text class="label" x="45" y="340">24Q1</text><text class="label" x="145" y="340">24Q2</text><text class="label" x="245" y="340">24Q3</text><text class="label" x="345" y="340">24Q4</text><text class="label" x="445" y="340">25Q1</text><text class="label" x="545" y="340">25Q2</text><text class="label" x="645" y="340">25Q3</text><text class="label" x="745" y="340">25Q4</text>
+</svg>

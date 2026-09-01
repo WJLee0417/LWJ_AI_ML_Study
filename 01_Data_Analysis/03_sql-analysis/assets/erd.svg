@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="390" viewBox="0 0 900 390">
+  <style>
+    .box { fill:#f8fafc; stroke:#2563eb; stroke-width:2; rx:10; }
+    .title { font:700 18px Arial,sans-serif; fill:#1e3a8a; }
+    .text { font:14px Arial,sans-serif; fill:#1f2937; }
+    .line { stroke:#64748b; stroke-width:2.5; marker-end:url(#arrow); }
+  </style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#64748b"/></marker></defs>
+  <line class="line" x1="240" y1="105" x2="350" y2="105"/>
+  <line class="line" x1="550" y1="105" x2="660" y2="105"/>
+  <rect class="box" x="35" y="45" width="205" height="120"/>
+  <text class="title" x="55" y="78">customers</text>
+  <text class="text" x="55" y="105">PK customer_id</text>
+  <text class="text" x="55" y="130">customer_unique_id</text>
+  <rect class="box" x="350" y="45" width="200" height="120"/>
+  <text class="title" x="370" y="78">orders</text>
+  <text class="text" x="370" y="105">PK order_id</text>
+  <text class="text" x="370" y="130">FK customer_id</text>
+  <rect class="box" x="660" y="45" width="205" height="120"/>
+  <text class="title" x="680" y="78">order_items</text>
+  <text class="text" x="680" y="105">PK order_id, item_id</text>
+  <text class="text" x="680" y="130">FK product_id</text>
+  <line class="line" x1="760" y1="165" x2="760" y2="245"/>
+  <rect class="box" x="660" y="245" width="205" height="105"/>
+  <text class="title" x="680" y="278">products</text>
+  <text class="text" x="680" y="305">PK product_id</text>
+  <text class="text" x="680" y="330">product_category</text>
+  <text class="text" x="255" y="95">1 : N</text>
+  <text class="text" x="565" y="95">1 : N</text>
+  <text class="text" x="775" y="215">N : 1</text>
+</svg>
