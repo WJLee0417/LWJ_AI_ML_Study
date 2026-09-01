@@ -17,11 +17,16 @@ if not DATA_PATH.exists():
     st.stop()
 
 data = pd.read_csv(DATA_PATH)
-district = st.sidebar.selectbox("자치구", sorted(data["district_name"].dropna().unique()), index=0)
-industry = st.sidebar.selectbox("업종", sorted(data["industry_name"].dropna().unique()))
+districts = sorted(data["district_name"].dropna().unique())
+industries = sorted(data["industry_name"].dropna().unique())
+district = st.sidebar.selectbox("자치구", districts, index=districts.index("강남구") if "강남구" in districts else 0)
+industry = st.sidebar.selectbox("업종", industries, index=industries.index("커피-음료") if "커피-음료" in industries else 0)
 subset = data.query("district_name == @district and industry_name == @industry").copy()
 periods = sorted(subset["period"].unique())
 selected_periods = st.sidebar.multiselect("분기", periods, default=periods)
+if not selected_periods:
+    st.info("하나 이상의 분기를 선택하세요.")
+    st.stop()
 subset = subset.loc[subset["period"].isin(selected_periods)]
 
 latest = subset.loc[subset["period"].eq(max(selected_periods))]
