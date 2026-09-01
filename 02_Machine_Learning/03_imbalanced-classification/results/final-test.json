@@ -1,0 +1,7 @@
+{
+  "model": "smote",
+  "threshold": 0.3,
+  "test_pr_auc": 0.7635754004769997,
+  "test_recall": 0.9090909090909091,
+  "test_precision": 0.03022162525184688
+}
