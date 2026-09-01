@@ -60,28 +60,37 @@ def build_risk_signals(item: Application) -> list[str]:
     return signals or ["입력된 최근 청구·상환 정보 기준 추가 위험 신호 없음"]
 
 
+def build_decision(probability: float) -> dict[str, str | float]:
+    if probability >= 0.7:
+        return {
+            "risk_grade": "high",
+            "decision_support": "고위험 추가 심사",
+            "policy_threshold": 0.7,
+            "policy_reason": "연체 확률이 0.70 이상이므로 고위험 추가 심사 대상입니다.",
+        }
+    if probability >= 0.3:
+        return {
+            "risk_grade": "medium",
+            "decision_support": "추가 심사",
+            "policy_threshold": 0.3,
+            "policy_reason": "연체 확률이 0.30 이상 0.70 미만이므로 추가 심사 대상입니다.",
+        }
+    return {
+        "risk_grade": "low",
+        "decision_support": "승인 보조 의견",
+        "policy_threshold": 0.3,
+        "policy_reason": "연체 확률이 추가 심사 기준인 0.30 미만입니다.",
+    }
+
+
 @app.post("/predict")
 def predict(item: Application):
     probability = float(model.predict_proba(pd.DataFrame([item.model_dump()]))[0, 1])
-
-    if probability >= 0.7:
-        risk_grade = "high"
-        decision_support = "고위험 추가 심사"
-        policy_threshold = 0.7
-    elif probability >= 0.3:
-        risk_grade = "medium"
-        decision_support = "추가 심사"
-        policy_threshold = 0.3
-    else:
-        risk_grade = "low"
-        decision_support = "승인 보조 의견"
-        policy_threshold = 0.3
+    decision = build_decision(probability)
 
     return {
         "default_probability": probability,
-        "risk_grade": risk_grade,
-        "decision_support": decision_support,
-        "policy_threshold": policy_threshold,
+        **decision,
         "top_risk_signals": build_risk_signals(item),
         "warning": "심사 보조 결과이며 자동 승인·거절에 사용할 수 없습니다.",
     }
