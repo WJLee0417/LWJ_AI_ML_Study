@@ -1,0 +1,6 @@
+{
+  "rows": 284807,
+  "fraud": 492,
+  "fraud_rate_pct": 0.1727485630620034,
+  "selected_model": "smote"
+}
