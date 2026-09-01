@@ -1,0 +1,7 @@
+{
+  "model": "random_forest",
+  "threshold": 0.3,
+  "test_pr_auc": 0.5668287639265915,
+  "test_recall": 0.8515448379804069,
+  "test_precision": 0.3200226564712546
+}
