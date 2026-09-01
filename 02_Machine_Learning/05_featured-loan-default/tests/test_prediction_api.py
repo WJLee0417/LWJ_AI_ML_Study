@@ -44,19 +44,31 @@ response = client.post("/predict", json=payload)
 body = response.json()
 assert response.status_code == 200
 assert 0 <= body["default_probability"] <= 1
+assert set(body) == {
+    "default_probability",
+    "risk_grade",
+    "decision_support",
+    "policy_threshold",
+    "policy_reason",
+    "top_risk_signals",
+    "warning",
+}
 assert body["risk_grade"] in {"low", "medium", "high"}
 assert body["decision_support"] in {"승인 보조 의견", "추가 심사", "고위험 추가 심사"}
 assert isinstance(body["policy_reason"], str)
 assert isinstance(body["top_risk_signals"], list)
+assert body["warning"] == "심사 보조 결과이며 자동 승인·거절에 사용할 수 없습니다."
 
 assert client.post("/predict", json={}).status_code == 422
 assert_invalid("LIMIT_BAL", 0)
+assert_invalid("SEX", 3)
 assert_invalid("AGE", 17)
 assert_invalid("AGE", 101)
 assert_invalid("PAY_0", -3)
 assert_invalid("PAY_0", 10)
 assert_invalid("EDUCATION", 7)
 assert_invalid("MARRIAGE", 4)
+assert_invalid("PAY_AMT1", -1)
 
 
 class StubModel:
@@ -87,3 +99,23 @@ try:
         assert reason in policy_body["policy_reason"]
 finally:
     api.model = original_model
+
+
+high_risk_payload = deepcopy(payload)
+high_risk_payload.update(
+    {
+        "PAY_0": 2,
+        "BILL_AMT1": 45000,
+        "PAY_AMT1": 0,
+        "PAY_AMT2": 0,
+        "PAY_AMT3": 0,
+        "PAY_AMT4": 0,
+        "PAY_AMT5": 0,
+        "PAY_AMT6": 0,
+    }
+)
+signals = api.build_risk_signals(api.Application(**high_risk_payload))
+assert "최근 상환 상태 지연" in signals
+assert "상환액 대비 청구액 비율 낮음" in signals
+assert "신용한도 대비 최근 청구액 높음" in signals
+assert all("성별" not in signal and "연령" not in signal for signal in signals)
