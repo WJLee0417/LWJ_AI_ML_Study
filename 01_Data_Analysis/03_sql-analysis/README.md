@@ -58,31 +58,38 @@ python src/download_data.py
 python src/transform_data.py
 ~~~
 
-### 2. MySQL 준비
+### 2. MySQL 8 컨테이너 준비
 
-MySQL 8.0 이상에서 스키마를 생성한다.
+Docker Compose가 MySQL 8.4 컨테이너와 스키마 초기화를 제공한다. 비밀번호는 Git에 저장하지 않고 현재 PowerShell 세션에만 둔다.
 
 ~~~powershell
-mysql -u root -p < sql/schema.sql
+$env:MYSQL_PASSWORD = "local_app_password"
+$env:MYSQL_ROOT_PASSWORD = "local_root_password"
+$env:MYSQL_PORT = "3309"
+docker compose up -d
+docker compose ps
 ~~~
 
-환경 변수로 접속 정보를 설정한다. 비밀번호를 코드나 Git에 기록하지 않는다.
+컨테이너가 healthy가 된 뒤, 같은 세션에 애플리케이션 접속 정보를 설정한다.
 
 ~~~powershell
-$env:MYSQL_HOST = "localhost"
-$env:MYSQL_PORT = "3306"
+$env:MYSQL_HOST = "127.0.0.1"
+$env:MYSQL_PORT = "3309"
 $env:MYSQL_DATABASE = "shopping_analytics"
 $env:MYSQL_USER = "app_user"
-$env:MYSQL_PASSWORD = "local_password"
-python src/load_to_mysql.py --reset
 ~~~
 
-### 3. SQL 실행과 Python 검증
+### 3. 적재 → SQL 실행 → Pandas 검증
+
+아래 순서는 포트폴리오 결과를 처음부터 재현한다. run_sql_analysis.py는 10개 쿼리를 실제 실행하고, 각 결과의 전체 행 수와 상위 5행을 results/query-results.md에 기록한다.
 
 ~~~powershell
-mysql -u app_user -p shopping_analytics < sql/analysis_queries.sql
+python src/load_to_mysql.py --reset
+python src/run_sql_analysis.py
 python src/verify_monthly_revenue.py
 ~~~
+
+월별 매출 검증이 끝나면 results/generated/monthly-revenue-verification.md에 PASS와 월별 대조표가 생성된다. 작업을 마친 뒤 컨테이너를 종료하려면 docker compose down을 실행한다.
 
 ## 분석 SQL 10개
 
@@ -99,9 +106,26 @@ python src/verify_monthly_revenue.py
 | 09 | 월별 상품 매출 순위는? | DENSE_RANK() |
 | 10 | 고객별 RFM 기초 지표는? | 다중 CTE |
 
+## 실행 검증 결과
+
+MySQL 8.4 컨테이너에 344,483행을 적재하고 10개 SQL을 실행해 확인한 결과다.
+
+- 배송 완료 주문 고객 93,358명 중 재구매 고객은 2,801명으로, 재구매율은 **3.00%**였다.
+- 데이터 기준일 90일 이전의 마지막 구매 고객은 **74,899명**으로 집계됐다.
+- 매출 상위 상품은 health_beauty 카테고리의 bb50f2e...로, 배송 완료 주문 기준 매출은 **67,258.03**이었다.
+- Pandas와 MySQL의 23개월 월별 매출은 모든 월에서 차이 **0.00**으로 일치해 PASS했다.
+
+전체 결과와 월별 대조 근거는 아래 검증 산출물에서 확인할 수 있다.
+
 ## 데이터 해석 시 주의점
 
 - 주문 이력이 없는 고객은 원본이 주문 중심으로 수집됐기 때문에 결과가 0명일 수 있다. 쿼리는 CRM/회원 테이블로 확장 가능한 형태로 유지한다.
 - customer_id는 주문 시점 고객 레코드이고, 재구매 분석은 customer_unique_id 기준으로 한다.
 - 데이터 마지막 구매일을 분석 기준일로 사용하므로 휴면 고객은 데이터셋 내부 상대 기준이다.
 - 카테고리 번역이 없는 상품은 unknown으로 보존한다.
+
+## 검증 산출물
+
+- [10개 SQL 실행 결과](results/query-results.md): 쿼리별 전체 결과 행 수와 상위 5행
+- [월별 매출 대조 결과](assets/monthly-revenue-verification.md): Pandas–MySQL 오차 0.01 이하 PASS 증빙
+- [Docker Compose 정의](compose.yaml): MySQL 8.4, healthcheck, 스키마 초기화

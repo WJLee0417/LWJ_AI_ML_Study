@@ -32,6 +32,8 @@ venv/
 !01_Data_Analysis/03_sql-analysis/data/processed/.gitkeep
 01_Data_Analysis/03_sql-analysis/results/generated/*
 !01_Data_Analysis/03_sql-analysis/results/generated/.gitkeep
+01_Data_Analysis/03_sql-analysis/.env
+01_Data_Analysis/03_sql-analysis/.env.local
 
 # Generated output for the customer segmentation project
 01_Data_Analysis/04_customer-segmentation/data/processed/*

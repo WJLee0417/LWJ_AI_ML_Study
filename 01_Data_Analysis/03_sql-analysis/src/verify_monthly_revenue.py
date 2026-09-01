@@ -48,6 +48,7 @@ def main() -> None:
         cursor.execute(MONTHLY_REVENUE_SQL)
         mysql_result = pd.DataFrame(cursor.fetchall(), columns=["revenue_month", "mysql_revenue"])
 
+    mysql_result["mysql_revenue"] = pd.to_numeric(mysql_result["mysql_revenue"])
     compared = pandas_result.merge(mysql_result, on="revenue_month", how="outer")
     compared["difference"] = compared["revenue"] - compared["mysql_revenue"]
     passed = compared["difference"].abs().le(0.01).all()
