@@ -56,8 +56,21 @@ def main():
     selected_name = comparison.iloc[0]["model"]
     final = Pipeline([("preprocess", preprocess(pd.concat([x_train, x_valid]))), ("model", candidates[selected_name])]).fit(pd.concat([x_train, x_valid]), pd.concat([y_train, y_valid]))
     test = metrics(selected_name, final, x_test, y_test)
+    probabilities = final.predict_proba(x_test)[:, 1]
+    threshold_rows = []
+    for threshold in (0.3, 0.5, 0.7):
+        predicted = probabilities >= threshold
+        threshold_rows.append(
+            {
+                "threshold": threshold,
+                "target_customers": int(predicted.sum()),
+                "precision": precision_score(y_test, predicted, zero_division=0),
+                "recall": recall_score(y_test, predicted, zero_division=0),
+            }
+        )
     joblib.dump(final, MODELS / "churn_model.joblib")
     comparison.to_csv(RESULTS / "validation-model-comparison.csv", index=False)
+    pd.DataFrame(threshold_rows).to_csv(RESULTS / "threshold-policy.csv", index=False)
     (RESULTS / "test-metrics.json").write_text(json.dumps(test, indent=2), encoding="utf-8")
     (RESULTS / "split-summary.json").write_text(json.dumps({"train":len(x_train),"validation":len(x_valid),"test":len(x_test)}), encoding="utf-8")
     RocCurveDisplay.from_estimator(final, x_test, y_test); plt.tight_layout(); plt.savefig(ASSETS / "roc-curve.png", dpi=160); plt.close()
