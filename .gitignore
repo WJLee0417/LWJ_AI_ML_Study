@@ -48,5 +48,11 @@ venv/
 !01_Data_Analysis/05_commercial-district-dashboard/data/raw/.gitkeep
 01_Data_Analysis/05_commercial-district-dashboard/data/processed/*
 !01_Data_Analysis/05_commercial-district-dashboard/data/processed/.gitkeep
-02_Machine_Learning/02_regression-basics/models/
-02_Machine_Learning/03_imbalanced-classification/data/raw/
+# Local data, trained models, and virtual environments for ML projects
+02_Machine_Learning/**/data/raw/*
+!02_Machine_Learning/**/data/raw/.gitkeep
+02_Machine_Learning/**/data/processed/*
+!02_Machine_Learning/**/data/processed/.gitkeep
+02_Machine_Learning/**/models/*
+!02_Machine_Learning/**/models/.gitkeep
+02_Machine_Learning/**/.venv/
