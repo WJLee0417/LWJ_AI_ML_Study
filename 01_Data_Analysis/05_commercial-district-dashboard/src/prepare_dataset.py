@@ -20,11 +20,16 @@ ALIASES = {
     "industry_code": ["svc_induty_cd", "서비스_업종_코드"],
     "industry_name": ["svc_induty_cd_nm", "서비스_업종_코드_명"],
     "estimated_sales": ["thsmon_selng_amt", "당월_매출_금액", "분기당_매출_금액"],
+    "sales_06_11": ["tmzon_6_11_selng_amt", "시간대_06~11_매출_금액"],
+    "sales_11_14": ["tmzon_11_14_selng_amt", "시간대_11~14_매출_금액"],
+    "sales_17_21": ["tmzon_17_21_selng_amt", "시간대_17~21_매출_금액"],
     "store_count": ["stor_co", "점포_수"],
     "opening_stores": ["opbiz_stor_co", "개업_점포_수"],
     "closing_stores": ["clsbiz_stor_co", "폐업_점포_수"],
     "floating_population": ["tot_flpop_co", "총_유동인구_수"],
     "district_name": ["signgu_cd_nm", "자치구_코드_명"],
+    "x_coord": ["xcnc_valu", "엑스좌표_값"],
+    "y_coord": ["ycnc_valu", "와이좌표_값"],
 }
 
 
@@ -58,28 +63,35 @@ def read_many(prefix: str, required: list[str]) -> pd.DataFrame:
 
 
 def main() -> None:
-    sales = normalize(
-        read_many("sales", ["period", "district_code", "industry_code", "industry_name", "estimated_sales"]),
-        ["period", "district_code", "industry_code", "industry_name", "estimated_sales"],
-    )
+    sales_columns = [
+        "period", "district_code", "industry_code", "industry_name", "estimated_sales",
+        "sales_06_11", "sales_11_14", "sales_17_21",
+    ]
+    sales = read_many("sales", sales_columns)
     stores = normalize(
         read_many("stores", ["period", "district_code", "industry_code", "store_count"]),
         ["period", "district_code", "industry_code", "store_count"],
     )
     population = normalize(read_csv(RAW / "population.csv"), ["period", "district_code", "floating_population"])
-    areas = normalize(read_csv(RAW / "areas.csv"), ["district_code", "district_label", "district_name"])
+    areas = normalize(
+        read_csv(RAW / "areas.csv"),
+        ["district_code", "district_label", "district_name", "x_coord", "y_coord"],
+    )
 
     key = ["period", "district_code", "industry_code"]
-    dataset = sales[key + ["industry_name", "estimated_sales"]].merge(
+    dataset = sales[key + ["industry_name", "estimated_sales", "sales_06_11", "sales_11_14", "sales_17_21"]].merge(
         stores[key + ["store_count"]], on=key, how="inner", validate="one_to_one"
     ).merge(
         population[["period", "district_code", "floating_population"]],
         on=["period", "district_code"], how="left", validate="many_to_one"
     ).merge(
-        areas[["district_code", "district_label", "district_name"]].drop_duplicates("district_code"),
+        areas[["district_code", "district_label", "district_name", "x_coord", "y_coord"]].drop_duplicates("district_code"),
         on="district_code", how="left", validate="many_to_one"
     )
-    numeric = ["estimated_sales", "store_count", "floating_population"]
+    numeric = [
+        "estimated_sales", "store_count", "floating_population", "sales_06_11",
+        "sales_11_14", "sales_17_21", "x_coord", "y_coord",
+    ]
     dataset[numeric] = dataset[numeric].apply(pd.to_numeric, errors="coerce")
     dataset = dataset.loc[dataset["period"].astype(str).str.startswith(("2024", "2025"))].copy()
     dataset["sales_per_store"] = dataset["estimated_sales"] / dataset["store_count"].replace(0, pd.NA)
