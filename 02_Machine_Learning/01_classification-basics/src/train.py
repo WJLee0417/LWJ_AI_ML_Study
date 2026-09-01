@@ -35,7 +35,7 @@ def preprocess(x):
 
 def metrics(name, model, x, y):
     pred, prob = model.predict(x), model.predict_proba(x)[:, 1]
-    return {"model": name, "precision": precision_score(y, pred), "recall": recall_score(y, pred), "f1": f1_score(y, pred), "roc_auc": roc_auc_score(y, prob)}
+    return {"model": name, "precision": precision_score(y, pred, zero_division=0), "recall": recall_score(y, pred, zero_division=0), "f1": f1_score(y, pred, zero_division=0), "roc_auc": roc_auc_score(y, prob)}
 
 def main():
     if not RAW.exists(): raise FileNotFoundError("Run download_data.py first.")
