@@ -48,3 +48,4 @@ venv/
 !01_Data_Analysis/05_commercial-district-dashboard/data/raw/.gitkeep
 01_Data_Analysis/05_commercial-district-dashboard/data/processed/*
 !01_Data_Analysis/05_commercial-district-dashboard/data/processed/.gitkeep
+02_Machine_Learning/02_regression-basics/models/
