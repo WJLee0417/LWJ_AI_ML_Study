@@ -40,3 +40,9 @@ venv/
 !01_Data_Analysis/04_customer-segmentation/results/figures/.gitkeep
 01_Data_Analysis/04_customer-segmentation/results/generated/*
 !01_Data_Analysis/04_customer-segmentation/results/generated/.gitkeep
+
+# Local public-data downloads and generated dashboard data
+01_Data_Analysis/05_commercial-district-dashboard/data/raw/*
+!01_Data_Analysis/05_commercial-district-dashboard/data/raw/.gitkeep
+01_Data_Analysis/05_commercial-district-dashboard/data/processed/*
+!01_Data_Analysis/05_commercial-district-dashboard/data/processed/.gitkeep
