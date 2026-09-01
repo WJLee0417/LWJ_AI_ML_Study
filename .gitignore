@@ -56,3 +56,10 @@ venv/
 02_Machine_Learning/**/models/*
 !02_Machine_Learning/**/models/.gitkeep
 02_Machine_Learning/**/.venv/
+
+# Local data, model weights, and environments for deep-learning projects
+03_Deep_Learning/**/data/raw/*
+!03_Deep_Learning/**/data/raw/.gitkeep
+03_Deep_Learning/**/models/*
+!03_Deep_Learning/**/models/.gitkeep
+03_Deep_Learning/**/.venv/

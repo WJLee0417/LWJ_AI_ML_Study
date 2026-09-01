@@ -7,8 +7,19 @@ PyTorch와 TensorFlow를 활용하여 인공신경망의 구조를 학습하고,
 * **프레임워크 활용:** PyTorch를 중심으로 텐서(Tensor) 연산과 역전파(Backpropagation) 과정을 코드로 구현합니다.
 * **AI Serving 준비:** 학습이 완료된 가중치(Weight) 모델을 저장하고, 향후 Java/Spring 기반의 백엔드 API 서버에서 이 모델을 호출하여 서빙(Serving)할 수 있는 구조를 구상합니다.
 
-## 📝 실습 내용 (진행 중)
-- 신경망 기초 (퍼셉트론, 활성화 함수)
-- 오차역전파 및 경사하강법 원리 실습
-- 이미지 데이터 분류 (CNN)
-- 학습된 모델 파일(.pt, .h5 등) 추출 및 저장 실습
+## 📁 포트폴리오 로드맵
+
+```text
+03_Deep_Learning/
+├── 01_pytorch-foundations/       # 텐서·autograd·학습 루프 기초
+├── 02_mnist-cnn-benchmark/       # FCN vs CNN 재현성 벤치마크
+├── 03_transfer-learning/         # 사전학습 모델 기반 이미지 분류
+├── 04_text-classification/       # NLP 분류 모델
+└── 05_model-serving/             # FastAPI 추론 API 및 Spring 연동
+```
+
+## 📝 실습 내용
+
+- `NN_Basic/`: 퍼셉트론, 다중 입력·출력, 역전파와 경사하강법 개념 실습
+- `CNN/`: MNIST에서 FCN과 CNN의 구조적 차이를 설명하는 노트북
+- `02_mnist-cnn-benchmark/`: 분리된 train/validation/test, 체크포인트, 테스트, 오분류 분석을 갖춘 첫 완성 프로젝트
