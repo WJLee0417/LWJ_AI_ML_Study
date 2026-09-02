@@ -20,8 +20,8 @@ PyTorch와 TensorFlow를 활용하여 인공신경망의 구조를 학습하고,
 
 ## 📝 실습 내용
 
-- `NN_Basic/`: 퍼셉트론, 다중 입력·출력, 역전파와 경사하강법 개념 실습
-- `CNN/`: MNIST에서 FCN과 CNN의 구조적 차이를 설명하는 노트북
+- `01_pytorch-foundations/`: 기존 신경망·CNN 노트북을 정리한 텐서, autograd, 학습 루프, 이미지 표현 기초와 짧은 구현 과제
 - `02_mnist-cnn-benchmark/`: 분리된 train/validation/test, 체크포인트, 테스트, 오분류 분석을 갖춘 첫 완성 프로젝트
 - `03_transfer-learning/`: 폐기물 이미지에서 Scratch CNN·ResNet18 특징 추출·미세조정·증강 효과를 비교하는 전이학습 프로젝트
 - `04_text-classification/`: TF-IDF 기준선과 한국어 Transformer를 비교하고 confidence 기반 상담사 검토 정책을 적용하는 문의 분류 프로젝트
+- `05_model-serving/`: 전이학습 이미지 모델을 FastAPI로 제공하고 Spring BFF 연동 계약과 API 테스트를 갖춘 서빙 프로젝트
