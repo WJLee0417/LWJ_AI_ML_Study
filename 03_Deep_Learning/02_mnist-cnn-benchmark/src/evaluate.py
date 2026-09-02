@@ -6,11 +6,15 @@ import argparse
 import csv
 from pathlib import Path
 
-import matplotlib.pyplot as plt
+import matplotlib
 import numpy as np
 import torch
 from sklearn.metrics import classification_report, confusion_matrix
 
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+from config import parser_with_config
 from data import build_dataloaders
 from models import build_model, count_parameters
 from train import resolve_device
@@ -18,16 +22,16 @@ from utils import save_json, set_seed
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Evaluate MNIST FCN/CNN checkpoints.")
-    parser.add_argument("--model", choices=["fcn", "cnn", "both"], default="both")
-    parser.add_argument("--batch-size", type=int, default=256)
-    parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--num-workers", type=int, default=0)
-    parser.add_argument("--data-dir", default="data/raw")
-    parser.add_argument("--models-dir", default="models")
-    parser.add_argument("--results-dir", default="results")
+    parser = parser_with_config("Evaluate MNIST FCN/CNN checkpoints.", {"model": "both", "batch_size": 256, "seed": 42, "num_workers": 0, "data_dir": "data/raw", "models_dir": "models", "results_dir": "results", "device": "auto"})
+    parser.add_argument("--model", choices=["fcn", "cnn", "both"], default=argparse.SUPPRESS)
+    parser.add_argument("--batch-size", type=int, default=argparse.SUPPRESS)
+    parser.add_argument("--seed", type=int, default=argparse.SUPPRESS)
+    parser.add_argument("--num-workers", type=int, default=argparse.SUPPRESS)
+    parser.add_argument("--data-dir", default=argparse.SUPPRESS)
+    parser.add_argument("--models-dir", default=argparse.SUPPRESS)
+    parser.add_argument("--results-dir", default=argparse.SUPPRESS)
     parser.add_argument("--assets-dir", default="assets")
-    parser.add_argument("--device", default="auto", choices=["auto", "cpu", "cuda"])
+    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default=argparse.SUPPRESS)
     return parser.parse_args()
 
 

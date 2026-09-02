@@ -1,0 +1,18 @@
+[
+  {
+    "model": "fcn",
+    "parameters": 235146,
+    "best_validation_accuracy": 0.9711666666666666,
+    "training_time_seconds": 87.90661490010098,
+    "checkpoint": "models\\best_fcn.pt",
+    "checkpoint_size_bytes": 943841
+  },
+  {
+    "model": "cnn",
+    "parameters": 206922,
+    "best_validation_accuracy": 0.9861666666666666,
+    "training_time_seconds": 86.24922009999864,
+    "checkpoint": "models\\best_cnn.pt",
+    "checkpoint_size_bytes": 831643
+  }
+]

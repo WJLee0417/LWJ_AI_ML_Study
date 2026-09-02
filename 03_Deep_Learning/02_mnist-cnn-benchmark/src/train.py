@@ -7,27 +7,31 @@ import csv
 import time
 from pathlib import Path
 
-import matplotlib.pyplot as plt
+import matplotlib
 import torch
 from torch import nn, optim
 
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+from config import parser_with_config
 from data import build_dataloaders
 from models import build_model, count_parameters
 from utils import save_json, set_seed
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Train reproducible MNIST FCN/CNN benchmarks.")
-    parser.add_argument("--model", choices=["fcn", "cnn", "both"], default="both")
-    parser.add_argument("--epochs", type=int, default=5)
-    parser.add_argument("--batch-size", type=int, default=128)
-    parser.add_argument("--learning-rate", type=float, default=1e-3)
-    parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--num-workers", type=int, default=0)
-    parser.add_argument("--data-dir", default="data/raw")
-    parser.add_argument("--models-dir", default="models")
-    parser.add_argument("--results-dir", default="results")
-    parser.add_argument("--device", default="auto", choices=["auto", "cpu", "cuda"])
+    parser = parser_with_config("Train reproducible MNIST FCN/CNN benchmarks.", {"model": "both", "epochs": 5, "batch_size": 128, "learning_rate": 1e-3, "seed": 42, "num_workers": 0, "data_dir": "data/raw", "models_dir": "models", "results_dir": "results", "device": "auto"})
+    parser.add_argument("--model", choices=["fcn", "cnn", "both"], default=argparse.SUPPRESS)
+    parser.add_argument("--epochs", type=int, default=argparse.SUPPRESS)
+    parser.add_argument("--batch-size", type=int, default=argparse.SUPPRESS)
+    parser.add_argument("--learning-rate", type=float, default=argparse.SUPPRESS)
+    parser.add_argument("--seed", type=int, default=argparse.SUPPRESS)
+    parser.add_argument("--num-workers", type=int, default=argparse.SUPPRESS)
+    parser.add_argument("--data-dir", default=argparse.SUPPRESS)
+    parser.add_argument("--models-dir", default=argparse.SUPPRESS)
+    parser.add_argument("--results-dir", default=argparse.SUPPRESS)
+    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default=argparse.SUPPRESS)
     return parser.parse_args()
 
 
@@ -186,6 +190,17 @@ def main() -> None:
 
     save_json(results_dir / "training-history.json", histories)
     save_json(results_dir / "validation-metrics.json", rows)
+    save_json(
+        results_dir / "runtime-info.json",
+        {
+            "device": str(device),
+            "torch_version": torch.__version__,
+            "cuda_available": torch.cuda.is_available(),
+            "cuda_device_name": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
+            "seed": args.seed,
+            "config": vars(args),
+        },
+    )
     write_validation_comparison(rows, results_dir)
     plot_loss_curves(histories, Path("assets") / "loss-curve.png")
     print("Training complete. Run `python src/evaluate.py` to evaluate the untouched test set.")

@@ -1,0 +1,11 @@
+# 재현 가능한 기본 실험 설정. CLI 인자가 이 값보다 우선합니다.
+model: both
+epochs: 5
+batch_size: 128
+learning_rate: 0.001
+seed: 42
+num_workers: 0
+data_dir: data/raw
+models_dir: models
+results_dir: results
+device: auto
