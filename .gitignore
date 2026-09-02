@@ -65,6 +65,7 @@ venv/
 !03_Deep_Learning/**/data/processed/.gitkeep
 03_Deep_Learning/**/models/*
 !03_Deep_Learning/**/models/.gitkeep
+03_Deep_Learning/**/.cache/
 03_Deep_Learning/**/results/generated/*
 !03_Deep_Learning/**/results/generated/.gitkeep
 03_Deep_Learning/**/.venv/

@@ -1,0 +1,2 @@
+experiment,test_accuracy,macro_precision,macro_recall,macro_f1,trainable_parameters,model_size_bytes
+resnet-finetune-aug,0.9232914923291492,0.9315006790285132,0.9289067798473217,0.9296774635989462,11181129,44806475

@@ -1,0 +1,29 @@
+{
+  "model_version": "resnet18-v1",
+  "architecture": "resnet-finetune",
+  "class_names": [
+    "cardboard",
+    "food-organics",
+    "glass",
+    "metal",
+    "miscellaneous-trash",
+    "paper",
+    "plastic",
+    "textile-trash",
+    "vegetation"
+  ],
+  "image_size": 224,
+  "normalization": "imagenet",
+  "review_threshold": 0.29768097400665283,
+  "validation_macro_f1": 0.9298997956341063,
+  "calibration_temperature": 1.3607045412063599,
+  "validation_nll_before": 0.25416064262390137,
+  "validation_nll_after": 0.2344268262386322,
+  "validation_ece_before": 0.038900949060916935,
+  "validation_ece_after": 0.018845011888260224,
+  "minimum_auto_precision": 0.9,
+  "automatic_validation_count": 712,
+  "automatic_validation_precision": 0.9297752808988764,
+  "checkpoint_file": "best_resnet-finetune-aug.pt",
+  "checkpoint_sha256": "dd7c8277fddeffc2a4cf5d6547e1adc3d2571d0016c1363a8abc7780d176bdde"
+}

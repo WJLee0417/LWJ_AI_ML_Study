@@ -1,0 +1,2 @@
+experiment,model,model_version,augmentation,class_weighting,best_validation_macro_f1,training_time_seconds,trainable_parameters,total_parameters,checkpoint_size_bytes
+resnet-finetune-aug,resnet-finetune,resnet18-v1,on,balanced,0.9298997956341063,1420.9415541999042,11181129,11181129,44806475

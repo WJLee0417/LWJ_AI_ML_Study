@@ -101,7 +101,7 @@ def main() -> None:
     raw_dir, output_dir = Path(args.raw_dir), Path(args.output_dir)
     if not raw_dir.exists():
         raise FileNotFoundError(f"Raw data directory not found: {raw_dir}")
-    if output_dir.exists() and any(output_dir.iterdir()):
+    if output_dir.exists() and any(path for path in output_dir.iterdir() if path.name != ".gitkeep"):
         raise FileExistsError(f"{output_dir} is not empty. Choose a new output directory to preserve its split.")
     class_paths = class_file_map(raw_dir) if not args.manifest else None
     grouped_paths = load_group_manifest(Path(args.manifest), raw_dir) if args.manifest else None
