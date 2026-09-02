@@ -15,7 +15,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import LabelEncoder
 
 from data import load_csv
-from policy import choose_review_threshold
+from policy import choose_review_threshold, operational_metrics
 from utils import save_json, set_seed, upsert_csv
 
 
@@ -51,14 +51,18 @@ def main() -> None:
     confidence = probabilities.max(axis=1)
     report = classification_report(validation_targets, predicted, target_names=encoder.classes_, output_dict=True, zero_division=0)
     policy = choose_review_threshold(validation_targets, predicted, confidence, args.minimum_auto_precision)
-    policy.update({"minimum_auto_precision": args.minimum_auto_precision, "derived_from": "validation"})
+    policy.update({
+        "minimum_auto_precision": args.minimum_auto_precision,
+        "derived_from": "validation-uncalibrated",
+        **operational_metrics(validation_targets, predicted, confidence, float(policy["threshold"])),
+    })
     models_dir, results_dir = Path(args.models_dir), Path(args.results_dir)
     models_dir.mkdir(parents=True, exist_ok=True)
     artifact_path = models_dir / f"{args.run_name}.joblib"
     if artifact_path.exists():
         raise FileExistsError(f"{artifact_path} already exists. Use a new --run-name to preserve this experiment.")
     joblib.dump({"pipeline": pipeline, "label_encoder": encoder, "policy": policy}, artifact_path)
-    summary = {"experiment": args.run_name, "model": "tfidf-logreg", "validation_accuracy": report["accuracy"], "validation_macro_f1": report["macro avg"]["f1-score"], "training_time_seconds": elapsed, "model_size_bytes": artifact_path.stat().st_size}
+    summary = {"experiment": args.run_name, "model": "tfidf-logreg", "validation_accuracy": report["accuracy"], "validation_macro_f1": report["macro avg"]["f1-score"], "training_time_seconds": elapsed, "model_size_bytes": artifact_path.stat().st_size, "validation_automated_coverage": policy["automated_coverage"], "validation_automated_precision": policy["automated_precision"], "validation_review_rate": policy["review_rate"]}
     save_json(results_dir / f"{args.run_name}-validation-metrics.json", {"summary": summary, "metrics": report, "review_policy": policy})
     upsert_csv(results_dir / "validation-model-comparison.csv", summary)
     print(f"[{args.run_name}] validation macro F1={summary['validation_macro_f1']:.4f}; review threshold={policy['threshold']:.4f}")

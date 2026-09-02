@@ -12,24 +12,13 @@ import torch
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import LabelEncoder
 from torch import nn, optim
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, get_linear_schedule_with_warmup
 
 from data import load_csv
-from policy import choose_review_threshold
+from inference import TokenizedTextDataset, resolve_device
+from policy import choose_review_threshold, operational_metrics
 from utils import save_json, set_seed, upsert_csv
-
-
-class InquiryDataset(Dataset):
-    def __init__(self, texts: list[str], labels: np.ndarray, tokenizer, max_length: int) -> None:
-        self.encodings = tokenizer(texts, truncation=True, padding=True, max_length=max_length)
-        self.labels = labels
-
-    def __len__(self) -> int:
-        return len(self.labels)
-
-    def __getitem__(self, index: int) -> dict[str, torch.Tensor]:
-        return {**{key: torch.tensor(value[index]) for key, value in self.encodings.items()}, "labels": torch.tensor(self.labels[index])}
 
 
 def parse_args() -> argparse.Namespace:
@@ -49,12 +38,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--results-dir", default="results")
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     return parser.parse_args()
-
-
-def resolve_device(requested: str) -> torch.device:
-    if requested == "cuda" and not torch.cuda.is_available():
-        raise RuntimeError("CUDA was requested but is not available.")
-    return torch.device("cuda" if requested == "auto" and torch.cuda.is_available() else "cpu" if requested == "auto" else requested)
 
 
 def evaluate(model, loader, device: torch.device) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -84,8 +67,8 @@ def main() -> None:
     encoder = LabelEncoder().fit(train["label"])
     train_targets, validation_targets = encoder.transform(train["label"]), encoder.transform(validation["label"])
     tokenizer = AutoTokenizer.from_pretrained(args.pretrained_model)
-    train_loader = DataLoader(InquiryDataset(train["text"].tolist(), train_targets, tokenizer, args.max_length), batch_size=args.batch_size, shuffle=True)
-    validation_loader = DataLoader(InquiryDataset(validation["text"].tolist(), validation_targets, tokenizer, args.max_length), batch_size=args.batch_size)
+    train_loader = DataLoader(TokenizedTextDataset(train["text"].tolist(), train_targets, tokenizer, args.max_length), batch_size=args.batch_size, shuffle=True)
+    validation_loader = DataLoader(TokenizedTextDataset(validation["text"].tolist(), validation_targets, tokenizer, args.max_length), batch_size=args.batch_size)
     model = AutoModelForSequenceClassification.from_pretrained(args.pretrained_model, num_labels=len(encoder.classes_), id2label={index: label for index, label in enumerate(encoder.classes_)}, label2id={label: index for index, label in enumerate(encoder.classes_)}).to(device)
     counts = Counter(train_targets.tolist())
     weights = torch.tensor([len(train_targets) / (len(encoder.classes_) * counts[index]) for index in range(len(encoder.classes_))], dtype=torch.float32, device=device)
@@ -114,7 +97,11 @@ def main() -> None:
             model.save_pretrained(run_dir)
             tokenizer.save_pretrained(run_dir)
             policy = choose_review_threshold(actual, predicted, confidence, args.minimum_auto_precision)
-            policy.update({"minimum_auto_precision": args.minimum_auto_precision, "derived_from": "validation"})
+            policy.update({
+                "minimum_auto_precision": args.minimum_auto_precision,
+                "derived_from": "validation-uncalibrated",
+                **operational_metrics(actual, predicted, confidence, float(policy["threshold"])),
+            })
             save_json(run_dir / "metadata.json", {"model_type": "transformer", "class_names": encoder.classes_.tolist(), "max_length": args.max_length, "policy": policy})
         else:
             stale += 1
@@ -122,7 +109,7 @@ def main() -> None:
                 print(f"Early stopping after {epoch} epochs.")
                 break
     elapsed = time.perf_counter() - started
-    summary = {"experiment": args.run_name, "model": "transformer", "pretrained_model": args.pretrained_model, "validation_accuracy": best_accuracy, "validation_macro_f1": best_f1, "training_time_seconds": elapsed, "model_size_bytes": sum(path.stat().st_size for path in run_dir.rglob("*") if path.is_file())}
+    summary = {"experiment": args.run_name, "model": "transformer", "pretrained_model": args.pretrained_model, "validation_accuracy": best_accuracy, "validation_macro_f1": best_f1, "training_time_seconds": elapsed, "model_size_bytes": sum(path.stat().st_size for path in run_dir.rglob("*") if path.is_file()), "validation_automated_coverage": policy["automated_coverage"], "validation_automated_precision": policy["automated_precision"], "validation_review_rate": policy["review_rate"]}
     save_json(Path(args.results_dir) / f"{args.run_name}-validation-history.json", history)
     upsert_csv(Path(args.results_dir) / "validation-model-comparison.csv", summary)
     print(f"Saved best validation checkpoint to {run_dir}")

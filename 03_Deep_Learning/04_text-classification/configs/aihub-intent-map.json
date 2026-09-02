@@ -1,0 +1,18 @@
+{
+  "source": "AI Hub 소상공인 고객 주문 질의-응답 텍스트",
+  "labels": [
+    {
+      "label": "delivery",
+      "intent_prefixes": ["배송_"]
+    },
+    {
+      "label": "refund",
+      "intent_prefixes": ["교환|반품|환불_"]
+    },
+    {
+      "label": "product",
+      "intent_prefixes": ["제품_"]
+    }
+  ],
+  "excluded_note": "현재 원본 데이터에는 account에 대응하는 안정적인 인텐트 묶음이 없어 첫 실험에서 제외한다."
+}

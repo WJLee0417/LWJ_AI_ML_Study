@@ -30,11 +30,14 @@ def upsert_csv(path: str | Path, row: dict[str, object]) -> None:
     destination = Path(path)
     destination.parent.mkdir(parents=True, exist_ok=True)
     rows = []
+    fieldnames = list(row)
     if destination.exists():
         with destination.open(encoding="utf-8", newline="") as file:
-            rows = [existing for existing in csv.DictReader(file) if existing["experiment"] != str(row["experiment"])]
+            reader = csv.DictReader(file)
+            fieldnames = list(dict.fromkeys([*(reader.fieldnames or []), *fieldnames]))
+            rows = [existing for existing in reader if existing["experiment"] != str(row["experiment"])]
     rows.append({key: str(value) for key, value in row.items()})
     with destination.open("w", encoding="utf-8", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=list(row))
+        writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
