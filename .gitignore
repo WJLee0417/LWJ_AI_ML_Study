@@ -60,6 +60,7 @@ venv/
 # Local data, model weights, and environments for deep-learning projects
 03_Deep_Learning/**/data/raw/*
 !03_Deep_Learning/**/data/raw/.gitkeep
+!03_Deep_Learning/03_transfer-learning/data/raw/dataset-manifest.example.csv
 03_Deep_Learning/**/data/processed/*
 !03_Deep_Learning/**/data/processed/.gitkeep
 03_Deep_Learning/**/models/*

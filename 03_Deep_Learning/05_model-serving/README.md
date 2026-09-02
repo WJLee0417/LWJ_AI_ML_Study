@@ -16,12 +16,13 @@ python src/train.py --model resnet-finetune --run-name resnet-finetune-aug --lea
 ```powershell
 pip install -r requirements.txt
 $env:MODEL_PATH = "C:\path\to\03_transfer-learning\models\best_resnet-finetune-aug.pt"
+$env:MODEL_MANIFEST_PATH = "C:\path\to\03_transfer-learning\artifacts\resnet-finetune-aug\manifest.json"
 $env:MODEL_VERSION = "resnet18-v1"
 $env:REVIEW_THRESHOLD = "0.80"
 uvicorn app.main:app --reload
 ```
 
-환경 변수를 생략하면 `03_transfer-learning/models/best_resnet-finetune-aug.pt`를 기본 경로로 찾는다. 체크포인트가 없거나 구조가 맞지 않으면 서버는 기동되지만 `/health`는 `503`을 반환한다.
+환경 변수를 생략하면 `03_transfer-learning/models/best_resnet-finetune-aug.pt`를 기본 경로로 찾는다. `MODEL_MANIFEST_PATH`를 설정하면 API는 checkpoint SHA-256, 아키텍처, 클래스 순서, 전처리, calibration temperature, review threshold를 검증·적용한다. 체크포인트나 manifest 계약이 맞지 않으면 서버는 기동되지만 `/health`는 `503`을 반환한다.
 
 ## API 계약
 

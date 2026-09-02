@@ -11,7 +11,7 @@
 
 ## 데이터 준비
 
-공개 데이터셋 또는 직접 수집한 이미지를 다음 구조로 배치한다. 클래스 이름은 API 응답에도 그대로 쓰이므로 영문 소문자와 하이픈처럼 안정적인 이름을 권장한다.
+공개 데이터셋 또는 직접 수집한 이미지를 다음 구조로 배치한다. 클래스 이름은 API 응답에도 그대로 쓰이므로 영문 소문자와 하이픈처럼 안정적인 이름을 권장한다. 데이터 출처·라이선스·제외 기준·한계는 [데이터 카드](docs/data-card.md)에 기록한다.
 
 ```text
 data/raw/
@@ -32,16 +32,18 @@ python src/prepare_data.py
 
 `data/processed`가 비어 있지 않으면 기존 분할을 보호하기 위해 중단한다. 새 분할이 필요하면 다른 `--output-dir`를 지정해 생성하고, 검토한 뒤 해당 경로를 학습에 전달한다.
 
+동일 물체의 연속 촬영본이 있으면 [그룹 manifest](data/raw/dataset-manifest.example.csv)를 작성해 `--manifest data/raw/dataset-manifest.csv`로 분할한다. 이 방식은 같은 `group_id`가 train/validation/test에 섞이는 누수를 막는다.
+
 ## 핵심 실험
 
-동일한 데이터 분할, seed, epoch 한도에서 아래 실험을 수행한다. Scratch 모델은 첫 기준선이고, ResNet18의 사전학습 가중치는 첫 실행 시 torchvision이 내려받는다.
+동일한 데이터 분할, seed, epoch 한도에서 아래 YAML 실험 설정을 수행한다. Scratch 모델은 첫 기준선이고, ResNet18의 사전학습 가중치는 첫 실행 시 torchvision이 내려받는다. CLI 인자는 YAML 설정보다 우선한다.
 
 | 실험 | 목적 | 실행 예시 |
 | --- | --- | --- |
-| `scratch-aug` | 작은 데이터에서 CNN 기준선 확인 | `python src/train.py --model scratch --run-name scratch-aug` |
-| `resnet-feature-aug` | 사전학습 특징 추출 효과 확인 | `python src/train.py --model resnet-feature --run-name resnet-feature-aug` |
-| `resnet-finetune-aug` | 전체 계층 미세조정 효과 확인 | `python src/train.py --model resnet-finetune --run-name resnet-finetune-aug --learning-rate 0.0001` |
-| `resnet-finetune-noaug` | 증강의 일반화 효과 확인 | `python src/train.py --model resnet-finetune --run-name resnet-finetune-noaug --augmentation off --learning-rate 0.0001` |
+| `scratch-aug` | 작은 데이터에서 CNN 기준선 확인 | `python src/train.py --config configs/scratch-aug.yaml` |
+| `resnet-feature-aug` | 사전학습 특징 추출 효과 확인 | `python src/train.py --config configs/resnet-feature-aug.yaml` |
+| `resnet-finetune-aug` | 전체 계층 미세조정 효과 확인 | `python src/train.py --config configs/resnet-finetune-aug.yaml` |
+| `resnet-finetune-noaug` | 증강의 일반화 효과 확인 | `python src/train.py --config configs/resnet-finetune-noaug.yaml` |
 
 필요하면 `--class-weighting none`을 별도 실험으로 실행해 불균형 보정의 영향을 비교한다. 작은 데이터에서는 validation macro F1의 평균과 클래스별 F1도 함께 보고, 단일 실행의 미세한 차이만으로 결론 내리지 않는다.
 
@@ -51,8 +53,11 @@ validation 결과를 비교해 하나의 운영 후보를 고른 후에만 해�
 
 ```bash
 python src/evaluate.py --run-name resnet-finetune-aug
+python src/calibration.py --run-name resnet-finetune-aug --model-version resnet18-v1
 python -m unittest discover -s tests -v
 ```
+
+`calibration.py`는 validation logits에 Temperature Scaling을 적용하고, 목표 자동 처리 precision(기본 0.90)을 만족하는 confidence threshold를 결정한다. 결과 [manifest](artifacts/)에는 모델 버전·클래스 순서·전처리·checkpoint SHA-256·보정 온도·검토 threshold가 기록되며 `05_model-serving`에서 그대로 읽는다.
 
 ## 결과물과 해석
 
@@ -64,5 +69,7 @@ python -m unittest discover -s tests -v
 | `assets/*-learning-curve.png` | 증강과 정규화가 과적합에 미친 영향 확인 |
 | `assets/*-confusion-matrix.png` | 서로 자주 혼동하는 재질 확인 |
 | `assets/*-gradcam-errors.png` | 오분류에서 모델이 주목한 이미지 영역 확인 |
+| `assets/*-reliability.png` | Temperature Scaling 전후 validation reliability diagram |
+| `artifacts/<run-name>/manifest.json` | 서빙용 모델 버전·전처리·클래스·보정·검토 정책 계약 |
 
 운영 후보는 정확도만으로 고르지 않는다. 소수 클래스를 놓치지 않는 macro F1, 필요한 메모리·학습 시간·추론 지연 시간, 그리고 Grad-CAM이 배경이나 워터마크가 아닌 재질 특성에 주목하는지를 함께 판단한다. Grad-CAM은 설명 보조 수단이며 인과적 근거는 아니다.

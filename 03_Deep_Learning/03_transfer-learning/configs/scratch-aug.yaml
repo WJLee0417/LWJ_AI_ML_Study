@@ -1,0 +1,16 @@
+model: scratch
+run_name: scratch-aug
+model_version: scratch-cnn-v1
+epochs: 20
+patience: 5
+batch_size: 32
+learning_rate: 0.001
+augmentation: "on"
+class_weighting: balanced
+seed: 42
+num_workers: 0
+processed_dir: data/processed
+models_dir: models
+results_dir: results
+assets_dir: assets
+device: auto
