@@ -1,0 +1,3 @@
+experiment,model,test_accuracy,test_macro_f1,review_threshold,model_size_bytes,calibration_source,automated_count,review_count,automated_coverage,automated_precision,review_rate
+tfidf-logreg-aihub,tfidf-logreg,0.8761111111111111,0.8760954300295971,0.5082717974187285,9655184,artifacts\tfidf-logreg-aihub\manifest.json,8598,402,0.9553333333333334,0.8949755757152826,0.04466666666666667
+klue-bert-aihub-v2,transformer,0.9551111111111111,0.9551030951304318,0.3596508204936981,443506141,artifacts\klue-bert-aihub-v2\manifest.json,8999,1,0.9998888888888889,0.9552172463607067,0.00011111111111111112

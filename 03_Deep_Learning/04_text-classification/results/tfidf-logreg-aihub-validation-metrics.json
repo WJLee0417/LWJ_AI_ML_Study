@@ -1,0 +1,56 @@
+{
+  "summary": {
+    "experiment": "tfidf-logreg-aihub",
+    "model": "tfidf-logreg",
+    "validation_accuracy": 0.8837706511175899,
+    "validation_macro_f1": 0.8838150837523885,
+    "training_time_seconds": 4.601650000084192,
+    "model_size_bytes": 9655184,
+    "validation_automated_coverage": 0.962293488824101,
+    "validation_automated_precision": 0.9000201979398101,
+    "validation_review_rate": 0.03770651117589893
+  },
+  "metrics": {
+    "delivery": {
+      "precision": 0.8859138533178114,
+      "recall": 0.887463556851312,
+      "f1-score": 0.88668802796388,
+      "support": 1715.0
+    },
+    "product": {
+      "precision": 0.8604910714285714,
+      "recall": 0.8991253644314868,
+      "f1-score": 0.8793840889649273,
+      "support": 1715.0
+    },
+    "refund": {
+      "precision": 0.9070336391437309,
+      "recall": 0.8647230320699708,
+      "f1-score": 0.8853731343283582,
+      "support": 1715.0
+    },
+    "accuracy": 0.8837706511175899,
+    "macro avg": {
+      "precision": 0.8844795212967046,
+      "recall": 0.8837706511175899,
+      "f1-score": 0.8838150837523885,
+      "support": 5145.0
+    },
+    "weighted avg": {
+      "precision": 0.8844795212967045,
+      "recall": 0.8837706511175899,
+      "f1-score": 0.8838150837523885,
+      "support": 5145.0
+    }
+  },
+  "review_policy": {
+    "threshold": 0.4512082511890674,
+    "automated_count": 4951,
+    "automated_precision": 0.9000201979398101,
+    "minimum_auto_precision": 0.9,
+    "derived_from": "validation-uncalibrated",
+    "review_count": 194,
+    "automated_coverage": 0.962293488824101,
+    "review_rate": 0.03770651117589893
+  }
+}

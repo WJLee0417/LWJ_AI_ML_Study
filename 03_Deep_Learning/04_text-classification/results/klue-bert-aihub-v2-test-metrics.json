@@ -1,0 +1,84 @@
+{
+  "summary": {
+    "experiment": "klue-bert-aihub-v2",
+    "model": "transformer",
+    "test_accuracy": 0.9551111111111111,
+    "test_macro_f1": 0.9551030951304318,
+    "review_threshold": 0.3596508204936981,
+    "model_size_bytes": 443506141,
+    "calibration_source": "artifacts\\klue-bert-aihub-v2\\manifest.json",
+    "automated_count": 8999,
+    "review_count": 1,
+    "automated_coverage": 0.9998888888888889,
+    "automated_precision": 0.9552172463607067,
+    "review_rate": 0.00011111111111111112
+  },
+  "metrics": {
+    "delivery": {
+      "precision": 0.9556153328850033,
+      "recall": 0.9473333333333334,
+      "f1-score": 0.9514563106796117,
+      "support": 3000.0
+    },
+    "product": {
+      "precision": 0.9566811062979007,
+      "recall": 0.957,
+      "f1-score": 0.9568405265789035,
+      "support": 3000.0
+    },
+    "refund": {
+      "precision": 0.9530578512396695,
+      "recall": 0.961,
+      "f1-score": 0.9570124481327801,
+      "support": 3000.0
+    },
+    "accuracy": 0.9551111111111111,
+    "macro avg": {
+      "precision": 0.9551180968075245,
+      "recall": 0.955111111111111,
+      "f1-score": 0.9551030951304318,
+      "support": 9000.0
+    },
+    "weighted avg": {
+      "precision": 0.9551180968075246,
+      "recall": 0.9551111111111111,
+      "f1-score": 0.9551030951304318,
+      "support": 9000.0
+    }
+  },
+  "review_policy": {
+    "threshold": 0.3596508204936981,
+    "automated_count": 5145,
+    "automated_precision": 0.9578231292517007,
+    "minimum_auto_precision": 0.9,
+    "derived_from": "validation-temperature-scaling",
+    "review_count": 0,
+    "automated_coverage": 1.0,
+    "review_rate": 0.0
+  },
+  "calibration": {
+    "artifact_type": "temperature-calibration-v1",
+    "run_name": "klue-bert-aihub-v2",
+    "model": "transformer",
+    "class_names": [
+      "delivery",
+      "product",
+      "refund"
+    ],
+    "calibration_temperature": 1.5864157676696777,
+    "validation_nll_before": 0.1752920150756836,
+    "validation_nll_after": 0.14286266267299652,
+    "validation_ece_before": 0.02739170194251426,
+    "validation_ece_after": 0.0046012023853028135,
+    "policy": {
+      "threshold": 0.3596508204936981,
+      "automated_count": 5145,
+      "automated_precision": 0.9578231292517007,
+      "minimum_auto_precision": 0.9,
+      "derived_from": "validation-temperature-scaling",
+      "review_count": 0,
+      "automated_coverage": 1.0,
+      "review_rate": 0.0
+    }
+  }
+}

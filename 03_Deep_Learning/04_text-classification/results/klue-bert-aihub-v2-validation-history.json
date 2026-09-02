@@ -1,0 +1,22 @@
+[
+  {
+    "epoch": 1,
+    "validation_accuracy": 0.9533527696793003,
+    "validation_macro_f1": 0.9533569373765917
+  },
+  {
+    "epoch": 2,
+    "validation_accuracy": 0.9549076773566569,
+    "validation_macro_f1": 0.9549211063274047
+  },
+  {
+    "epoch": 3,
+    "validation_accuracy": 0.9574344023323615,
+    "validation_macro_f1": 0.957427174806028
+  },
+  {
+    "epoch": 4,
+    "validation_accuracy": 0.9578231292517007,
+    "validation_macro_f1": 0.9578127983938322
+  }
+]

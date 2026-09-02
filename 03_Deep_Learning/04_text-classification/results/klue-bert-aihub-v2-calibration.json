@@ -1,0 +1,25 @@
+{
+  "artifact_type": "temperature-calibration-v1",
+  "run_name": "klue-bert-aihub-v2",
+  "model": "transformer",
+  "class_names": [
+    "delivery",
+    "product",
+    "refund"
+  ],
+  "calibration_temperature": 1.5864157676696777,
+  "validation_nll_before": 0.1752920150756836,
+  "validation_nll_after": 0.14286266267299652,
+  "validation_ece_before": 0.02739170194251426,
+  "validation_ece_after": 0.0046012023853028135,
+  "policy": {
+    "threshold": 0.3596508204936981,
+    "automated_count": 5145,
+    "automated_precision": 0.9578231292517007,
+    "minimum_auto_precision": 0.9,
+    "derived_from": "validation-temperature-scaling",
+    "review_count": 0,
+    "automated_coverage": 1.0,
+    "review_rate": 0.0
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "artifact_type": "temperature-calibration-v1",
+  "run_name": "tfidf-logreg-aihub",
+  "model": "tfidf-logreg",
+  "class_names": [
+    "delivery",
+    "product",
+    "refund"
+  ],
+  "calibration_temperature": 0.6189452409744263,
+  "validation_nll_before": 0.36728032429492835,
+  "validation_nll_after": 0.3275237865078441,
+  "validation_ece_before": 0.08821935042852862,
+  "validation_ece_after": 0.010860639594460814,
+  "policy": {
+    "threshold": 0.5082717974187285,
+    "automated_count": 4951,
+    "automated_precision": 0.9000201979398101,
+    "minimum_auto_precision": 0.9,
+    "derived_from": "validation-temperature-scaling",
+    "review_count": 194,
+    "automated_coverage": 0.962293488824101,
+    "review_rate": 0.03770651117589893
+  }
+}

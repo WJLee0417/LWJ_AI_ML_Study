@@ -1,0 +1,84 @@
+{
+  "summary": {
+    "experiment": "tfidf-logreg-aihub",
+    "model": "tfidf-logreg",
+    "test_accuracy": 0.8761111111111111,
+    "test_macro_f1": 0.8760954300295971,
+    "review_threshold": 0.5082717974187285,
+    "model_size_bytes": 9655184,
+    "calibration_source": "artifacts\\tfidf-logreg-aihub\\manifest.json",
+    "automated_count": 8598,
+    "review_count": 402,
+    "automated_coverage": 0.9553333333333334,
+    "automated_precision": 0.8949755757152826,
+    "review_rate": 0.04466666666666667
+  },
+  "metrics": {
+    "delivery": {
+      "precision": 0.8900414937759336,
+      "recall": 0.858,
+      "f1-score": 0.8737270875763747,
+      "support": 3000.0
+    },
+    "product": {
+      "precision": 0.8544764315090161,
+      "recall": 0.9003333333333333,
+      "f1-score": 0.8768057133582211,
+      "support": 3000.0
+    },
+    "refund": {
+      "precision": 0.8856464200882254,
+      "recall": 0.87,
+      "f1-score": 0.8777534891541954,
+      "support": 3000.0
+    },
+    "accuracy": 0.8761111111111111,
+    "macro avg": {
+      "precision": 0.876721448457725,
+      "recall": 0.8761111111111112,
+      "f1-score": 0.8760954300295971,
+      "support": 9000.0
+    },
+    "weighted avg": {
+      "precision": 0.876721448457725,
+      "recall": 0.8761111111111111,
+      "f1-score": 0.8760954300295971,
+      "support": 9000.0
+    }
+  },
+  "review_policy": {
+    "threshold": 0.5082717974187285,
+    "automated_count": 4951,
+    "automated_precision": 0.9000201979398101,
+    "minimum_auto_precision": 0.9,
+    "derived_from": "validation-temperature-scaling",
+    "review_count": 194,
+    "automated_coverage": 0.962293488824101,
+    "review_rate": 0.03770651117589893
+  },
+  "calibration": {
+    "artifact_type": "temperature-calibration-v1",
+    "run_name": "tfidf-logreg-aihub",
+    "model": "tfidf-logreg",
+    "class_names": [
+      "delivery",
+      "product",
+      "refund"
+    ],
+    "calibration_temperature": 0.6189452409744263,
+    "validation_nll_before": 0.36728032429492835,
+    "validation_nll_after": 0.3275237865078441,
+    "validation_ece_before": 0.08821935042852862,
+    "validation_ece_after": 0.010860639594460814,
+    "policy": {
+      "threshold": 0.5082717974187285,
+      "automated_count": 4951,
+      "automated_precision": 0.9000201979398101,
+      "minimum_auto_precision": 0.9,
+      "derived_from": "validation-temperature-scaling",
+      "review_count": 194,
+      "automated_coverage": 0.962293488824101,
+      "review_rate": 0.03770651117589893
+    }
+  }
+}

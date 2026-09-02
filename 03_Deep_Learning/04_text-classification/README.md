@@ -63,6 +63,23 @@ python -m unittest discover -s tests -v
 
 `results/validation-model-comparison.csv`로 validation 성능을 비교하고, 선택된 experiment의 최종 수치는 `results/model-comparison.csv`와 `*-test-metrics.json`에서 확인한다.
 
+### AI Hub 실제 비교 결과
+
+동일한 AI Hub 고객 질문 분할(train 30,855 / validation 5,145 / 공식 holdout test 9,000)에서 실행한 결과다. 모든 threshold와 Temperature Scaling은 validation에서만 고정했고, test set은 모델별 최종 1회 평가에만 사용했다.
+
+| 지표 | TF-IDF + Logistic Regression | KLUE-BERT Fine-tuning |
+| --- | ---: | ---: |
+| validation macro F1 | 0.8838 | **0.9578** |
+| test macro F1 | 0.8761 | **0.9551** |
+| test accuracy | 0.8761 | **0.9551** |
+| 자동 처리율 (test) | 95.53% | **99.99%** |
+| 자동 처리 precision (test) | 89.50% | **95.52%** |
+| 상담사 이관율 (test) | 4.47% | **0.01%** |
+| 학습 시간 | 4.6초 | 2,569초 (약 42분 49초) |
+| 모델 크기 | 9.7MB | 443.5MB |
+
+**운영 후보는 KLUE-BERT다.** 모든 라벨의 test F1이 0.95 안팎으로 올라가고 자동 처리 precision도 높다. 다만 모델이 약 46배 크고 학습 시간이 길어, 서빙에서는 앱 시작 시 한 번만 로드하고 CPU/GPU 추론 지연·메모리를 별도로 측정해야 한다. 99.99%라는 높은 자동 처리율은 현재 공식 holdout과 유사한 분포에서 얻은 결과이므로, 채널·시기·표현이 다른 외부 문의로 자동 처리 정책을 재검증해야 한다.
+
 ## 자동 분류 / 사람 검토 정책
 
 각 모델은 validation 예측에 Temperature Scaling을 적용한 뒤 `minimum_auto_precision`(기본 0.90)을 만족하면서 자동 처리량이 가장 큰 threshold를 선택한다. 보정 manifest가 없을 때만 학습 시 저장된 미보정 정책을 사용한다.

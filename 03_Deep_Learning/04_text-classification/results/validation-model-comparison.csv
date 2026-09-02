@@ -1,0 +1,3 @@
+experiment,model,validation_accuracy,validation_macro_f1,training_time_seconds,model_size_bytes,validation_automated_coverage,validation_automated_precision,validation_review_rate,pretrained_model
+tfidf-logreg-aihub,tfidf-logreg,0.8837706511175899,0.8838150837523885,4.601650000084192,9655184,0.962293488824101,0.9000201979398101,0.03770651117589893,
+klue-bert-aihub-v2,transformer,0.9578231292517007,0.9578127983938322,2569.1832288000733,443506141,1.0,0.9578231292517007,0.0,klue/bert-base

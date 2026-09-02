@@ -93,7 +93,7 @@ def main() -> None:
         print(f"[{args.run_name}] epoch {epoch}/{args.epochs} | validation macro F1={report['macro avg']['f1-score']:.4f}")
         if report["macro avg"]["f1-score"] > best_f1:
             best_f1, best_accuracy, stale = report["macro avg"]["f1-score"], report["accuracy"], 0
-            run_dir.mkdir(parents=True)
+            run_dir.mkdir(parents=True, exist_ok=True)
             model.save_pretrained(run_dir)
             tokenizer.save_pretrained(run_dir)
             policy = choose_review_threshold(actual, predicted, confidence, args.minimum_auto_precision)
