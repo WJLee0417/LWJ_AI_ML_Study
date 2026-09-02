@@ -1,8 +1,20 @@
 # 한국어 고객 문의 자동 분류
 
-고객 문의 텍스트를 배송·환불·계정·상품 등 업무 라벨로 분류하고, 충분히 확신하는 건만 자동 배정하며 나머지는 상담사 검토로 넘기는 모델을 만든다. 기존 머신러닝 분류 프로젝트의 임계값 의사결정 방식을 딥러닝 분류와 연결한다.
+고객 문의 텍스트를 배송·환불·상품 업무 라벨로 분류하고, 충분히 확신하는 건만 자동 배정하며 나머지는 상담사 검토로 넘기는 모델을 만든다.
 
-## 데이터와 검증 원칙
+> **결론:** 동일한 공식 holdout test 9,000건에서 KLUE-BERT fine-tuning은 TF-IDF 기준선보다 macro F1을 **0.8761 → 0.9551**로 높였고, 자동 처리 precision은 **89.50% → 95.52%**로 개선했다.
+
+## 핵심 결과
+
+| 항목 | 결과 |
+| --- | --- |
+| 운영 후보 | KLUE-BERT (`klue/bert-base`) fine-tuning |
+| 최종 test macro F1 | **0.9551** |
+| 자동 처리 precision / 이관율 | **95.52% / 0.01%** |
+| 데이터 | AI Hub 고객 질문 45,000건 · 3개 라벨 |
+| 안전장치 | PII 마스킹 · 상담번호 그룹 분할 · validation 기반 보정 · holdout 최종 1회 평가 |
+
+## 문제 정의와 검증 원칙
 
 - 원본 CSV는 [데이터 계약](data/README.md)의 `text`, `label` 열을 따른다. 학습 전에 이메일·전화번호·주문번호는 `[EMAIL]`, `[PHONE]`, `[ORDER_ID]`로 치환한다.
 - 라벨의 포함·제외 경계와 애매 사례는 [라벨 정의서](docs/label-guide.md)에서 관리한다. 새 업무는 기존 코드에 억지로 합치지 않고 정의서·데이터·모델 버전을 함께 갱신한다.
@@ -11,7 +23,12 @@
 - 모델 비교·Early Stopping·자동 배정 confidence 임계값은 validation에서만 결정한다. test set은 운영 후보를 정한 뒤 한 번만 평가한다.
 - 정확도 외에 macro precision/recall/F1과 클래스별 F1을 기록한다. 운영 지표는 `자동 처리율`, `자동 처리 precision`, `상담사 이관율`까지 함께 고정한다.
 
-## 실행
+```text
+고객 질문 → PII 마스킹 → 라벨 정규화 → 상담번호 단위 분할
+→ 기준선/Transformer 학습 → validation 보정 → 자동 분류 또는 상담사 이관
+```
+
+## 재현 방법
 
 ```bash
 pip install -r requirements.txt
@@ -53,7 +70,7 @@ python src/evaluate.py --run-name klue-bert-finetune --test-csv data/processed-t
 python -m unittest discover -s tests -v
 ```
 
-## 비교 프레임
+## 실험 설계
 
 | 실험 | 확인할 점 |
 | --- | --- |
@@ -63,7 +80,7 @@ python -m unittest discover -s tests -v
 
 `results/validation-model-comparison.csv`로 validation 성능을 비교하고, 선택된 experiment의 최종 수치는 `results/model-comparison.csv`와 `*-test-metrics.json`에서 확인한다.
 
-### AI Hub 실제 비교 결과
+## 실험 결과
 
 동일한 AI Hub 고객 질문 분할(train 30,855 / validation 5,145 / 공식 holdout test 9,000)에서 실행한 결과다. 모든 threshold와 Temperature Scaling은 validation에서만 고정했고, test set은 모델별 최종 1회 평가에만 사용했다.
 
@@ -78,7 +95,19 @@ python -m unittest discover -s tests -v
 | 학습 시간 | 4.6초 | 2,569초 (약 42분 49초) |
 | 모델 크기 | 9.7MB | 443.5MB |
 
-**운영 후보는 KLUE-BERT다.** 모든 라벨의 test F1이 0.95 안팎으로 올라가고 자동 처리 precision도 높다. 다만 모델이 약 46배 크고 학습 시간이 길어, 서빙에서는 앱 시작 시 한 번만 로드하고 CPU/GPU 추론 지연·메모리를 별도로 측정해야 한다. 99.99%라는 높은 자동 처리율은 현재 공식 holdout과 유사한 분포에서 얻은 결과이므로, 채널·시기·표현이 다른 외부 문의로 자동 처리 정책을 재검증해야 한다.
+### 해석
+
+- KLUE-BERT는 세 라벨 모두 test F1 0.95 안팎을 달성했고, 기준선보다 macro F1을 **0.0790** 높였다.
+- 반면 모델은 약 46배 크고 학습 시간도 길다. 서빙에서는 앱 시작 시 한 번만 로드하고 CPU/GPU 추론 지연·메모리를 별도로 측정해야 한다.
+- 99.99%라는 높은 자동 처리율은 현재 공식 holdout과 유사한 분포에서 얻은 결과다. 채널·시기·표현이 다른 외부 문의로 정책을 재검증해야 한다.
+
+## 운영 적용 판단
+
+| 선택 | 근거 | 후속 확인 |
+| --- | --- | --- |
+| KLUE-BERT를 운영 후보로 선정 | macro F1·자동 처리 precision이 모두 가장 높음 | FastAPI 추론 지연, 메모리, 배치 처리량 측정 |
+| validation threshold `0.3597` 적용 | validation에서 precision 0.9578로 목표 0.90 충족 | 신규 채널 데이터에서 자동 처리 precision 모니터링 |
+| 저신뢰 예측은 상담사 이관 | test에서 1건이 이관됨 | 실제 이관 사유·상담사 재분류 결과 수집 |
 
 ## 자동 분류 / 사람 검토 정책
 
