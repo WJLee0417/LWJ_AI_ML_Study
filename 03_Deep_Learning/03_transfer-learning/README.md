@@ -108,7 +108,7 @@ python -m unittest discover -s tests -v
 
 | 위치 | Git 포함 | 용도 |
 | --- | --- | --- |
-| `README.md` | 예 | 포트폴리오용 결론, 핵심 지표, 시각화 |
+| `README.md` | 예 | 실험 결론, 핵심 지표, 시각화 |
 | `results/` | 예 | CSV·JSON 형식의 재현 가능한 수치 근거 |
 | `assets/` | 예 | 혼동행렬, 학습 곡선, Grad-CAM, 신뢰도 그래프 |
 | `artifacts/<run-name>/manifest.json` | 예 | 서빙 모델 계약: 클래스 순서·전처리·보정·검토 기준·checkpoint 해시 |
